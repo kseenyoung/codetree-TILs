@@ -23,7 +23,7 @@ for i in range(1, n+1):
 # for d in dp:
 #     print(d)
 
-print(dp[n-1][n-1])
+print(dp[n][n])
 # BFS
 # que = deque()
 # que.append((0, 0, board[0][0]))
