@@ -5,6 +5,10 @@ input = sys.stdin.readline
 n = int(input())
 board = [list(map(int, input().split())) for _ in range(n)]
 
+if n == 1:
+    print(board[0][0])
+    exit()
+
 # DP
 dp = [[1e9]*(n+1) for _ in range(n+1)]
 dp[1][1] = board[0][0]
