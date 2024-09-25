@@ -15,14 +15,19 @@ dp[1][1] = board[0][0]
 
 for i in range(1, n+1):
     for j in range(1, n+1):
-        if board[i-1][j-1] <= dp[i-1][j] and board[i-1][j-1] <= dp[i][j-1]:
+        if dp[i-1][j] == 1e9 or dp[i][j-1] == 1e9:
+            dp[i][j] = min(board[i-1][j-1], dp[i-1][j], dp[i][j-1])
+        elif board[i-1][j-1] > dp[i-1][j] and board[i-1][j-1] > dp[i][j-1]:
+            dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+        elif board[i-1][j-1] < dp[i-1][j] and board[i-1][j-1] < dp[i][j-1]:
             dp[i][j] = board[i-1][j-1]
         else:
-            dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+            dp[i][j] = board[i-1][j-1]
+        # print(dp[i][j])
 
 # for d in dp:
 #     print(d)
-
+# print(dp)
 print(dp[n][n])
 # BFS
 # que = deque()
