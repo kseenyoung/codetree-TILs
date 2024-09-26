@@ -1,37 +1,27 @@
 import sys
 input = sys.stdin.readline
-sys.setrecursionlimit(10**5)
 
 n = int(input())
 board = [list(map(int, input().split())) for _ in range(n)]
-answer = [[0]*n for _ in range(n)]
-visited = [[False]*n for _ in range(n)]
+dp = [[1]*n for _ in range(n)]
 
-dr = [0, 1, 0, -1]
-dc = [1, 0, -1, 0]
-
-def dfs(i, j, count):
-    if answer[i][j] > count:
-        return False
-    
-    for d in range(4):
-        row = i + dr[d]
-        col = j + dc[d]
-        if -1 < row < n and -1 < col < n and board[i][j] < board[row][col] and not visited[row][col]:
-            visited[row][col] = True
-            answer[row][col] = max(answer[row][col], count+1)
-            dfs(row, col, count+1)
-            visited[row][col] = False
-
+sorted_list = []
 for i in range(n):
     for j in range(n):
-        visited[i][j] = True
-        answer[i][j] = max(answer[i][j], 1)
-        dfs(i, j, 1)
-        visited[i][j] = False
+        sorted_list.append((board[i][j], i, j))
 
-result = 0
-for a in answer:
-    result = max(result, max(a))
+sorted_list.sort()
+dr = [1, 0, -1, 0]
+dc = [0, 1, 0, -1]
 
-print(result)
+for _, i, j in sorted_list:
+    for d in range(4):
+        row, col = i+dr[d], j+dc[d]
+        if -1 < row < n and -1 < col < n and board[i][j] < board[row][col] and dp[i][j]+1 > dp[row][col]:
+            dp[row][col] = dp[i][j]+1
+
+answer = 0
+for d in dp:
+    answer = max(answer, max(d))
+
+print(answer)
