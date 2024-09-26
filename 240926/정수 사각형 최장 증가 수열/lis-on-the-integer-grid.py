@@ -1,35 +1,36 @@
 import sys
-from collections import deque
 input = sys.stdin.readline
 
 n = int(input())
 board = [list(map(int, input().split())) for _ in range(n)]
-answer = [[1]*n for _ in range(n)]
+answer = [[0]*n for _ in range(n)]
+visited = [[False]*n for _ in range(n)]
 
 dr = [0, 1, 0, -1]
 dc = [1, 0, -1, 0]
 
-def bfs(i, j):
-    que = deque()
-    que.append((i, j, 1))
-
-    while que:
-        row, col, val = que.popleft()
-        if answer[row][col] > val:
-            continue
-
-        for d in range(4):
-            r = row + dr[d]
-            c = col + dc[d]
-            if -1 < r < n and -1 < c < n and answer[r][c] < val+1 and board[row][col] < board[r][c]:
-                answer[r][c] = val+1
-                que.append((r, c, val+1))
+def dfs(i, j, count):
+    if answer[i][j] > count:
+        return False
+    
+    for d in range(4):
+        row = i + dr[d]
+        col = j + dc[d]
+        if -1 < row < n and -1 < col < n and board[i][j] < board[row][col] and not visited[row][col]:
+            visited[row][col] = True
+            answer[row][col] = max(answer[row][col], count+1)
+            dfs(row, col, count+1)
+            visited[row][col] = False
 
 for i in range(n):
     for j in range(n):
-        bfs(i, j)
+        visited[i][j] = True
+        answer[i][j] = max(answer[i][j], 1)
+        dfs(i, j, 1)
+        visited[i][j] = False
 
 result = 0
 for a in answer:
     result = max(result, max(a))
+
 print(result)
